@@ -18,3 +18,29 @@ eg: [Redis](https://github.com/redis/redis), [MongoDB](https://github.com/mongod
 ## Part 2 Using existing key-value stores as models
 Refer to LevelDB
 - It is based on a Log-Structured Merge Tree(LSM)
+
+## Part 3 Comparative Analysis of the Architectures of Kyoto Cabinet and LevelDB
+
+Components of a Key-Value Store
+- Interface: minimum API--Get(), Put(), Delete()
+- Parametrization
+- Data Storage: used to access the memory where the data
+- Data Structure: generally a hash table or B+ Tree. LevelDB used a Log-Structured Merge Tree
+- Memory Management
+- Iteration: solutions are mostly Iterators and Cursors
+- String
+- Lock Management
+- Error Management
+- Logging
+- Transaction Management: ensures that all the operations are executed correctly
+- Compression: compress the data
+- Comparators
+- Checksum
+- Snapshot
+- Partitioning
+- Replication
+- Testing Framework
+
+Doxygen is a powerful tool to navigate through the hierarchies of modules and classes of an application
+
+
