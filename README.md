@@ -43,4 +43,13 @@ Components of a Key-Value Store
 
 Doxygen is a powerful tool to navigate through the hierarchies of modules and classes of an application
 
+LevelDB is using a class called "Slice". 
+- A Slice holds a byte array along with the size that array.
+- know the size of the string in time O(1).
+- the Slice class handles the copy by making a shallow copy.It simply copies the pointer to the byte array.
+
+LevelDB is not using exceptions at all, but a special class called Status. This class holds both an error value and an error message.
+
+## Part 4: API Design
+
 
