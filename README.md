@@ -18,6 +18,16 @@ Implement a Key-Value Store. Thanks to [Emmanuel Goossaert](http://goossaert.com
   
   - [3. Comparing the APIs of existing databases](#3-comparing-the-apis-of-existing-databases)
 
+- [Part 5 Hash table implementations](#part-5-hash-table-implementations)
+  - [2. Implementations](#2-implementations)
+
+- [Part 6 Open-Addressing Hash Tables](#part-6-open-addressing-hash-tables)
+  - [1. Open-addressing hash tables](#1-open-addressing-hash-tables)
+  - [2. Comparing different algorithm](#2-comparing-different-algorithm)
+
+- [Part 7: Optimizing Data Structures for SSDs](#part-7-optimizing-data-structures-for-ssds)
+  - []()
+  - []()
 </details>
 
 
@@ -70,7 +80,7 @@ LevelDB is using a class called "Slice"
 
 LevelDB is not using exceptions at all, but a special class called Status. This class holds both an error value and an error message
 
-## Part 4: API Design
+## Part 4 API Design
 ### 1. General principles for API design
 1. When in doubt, leave it out
 2. Don’t make the client do anything the library could do.
@@ -116,3 +126,89 @@ Two ways of doing things here :
 
 ***3.4 Parametrization***
 
+```
+/* LevelDB */
+leveldb::DB* db;
+leveldb::Options options;
+options.create_if_missing = true;
+options.compression = leveldb::kNoCompression;
+leveldb::DB::Open(options, "/tmp/testdb", &db);
+...
+leveldb::WriteOptions write_options;
+write_options.sync = true;
+db->Put(write_options, "key", "value");
+```
+
+**Decision** : Use the LevelDB's method
+
+db.Put(leveldb::WriteOptions, "key", "value");
+
+***3.5 Error management***
+
+How errors are being reported to the user when they occur, as she uses the public interfaces
+
+```
+# LevelDB
+leveldb::Status s = db->Put(leveldb::WriteOptions(), "key", "value");
+if (!s.ok()) {
+  cerr << s.ToString() << endl;
+}
+```
+
+**Decision** : Use the LevelDB's method
+
+## Part 5 Hash table implementations
+### 2. Implementations
+
+***2.1 unordered_map from TR1***
+
+The bucket array is allocated on the heap, and scales up or down automatically based on the load factor of the hash table
+
+```
+/* from gcc-4.8.0/libstdc++-v3/include/tr1/hashtable_policy.h */ 
+template
+  struct _Hash_node<_Value, false>
+  {
+    _Value       _M_v;
+    _Hash_node*  _M_next;
+  };
+```
+
+The bucket array is allocated at once on the heap, but the Nodes are allocated with individual calls to the C++ memory allocator
+
+[Figure 5.1](https://i0.wp.com/codecapsule.com/wp-content/uploads/2013/04/kvstore_unordered_map_web.jpg?w=770&ssl=1) is useful.
+
+***2.2 dense_hash_map from SparseHash***
+
+Offers two hash table implementations : 
+- sparse_hash_map : amazing memory footprint  but slow that use sparsetable
+- dense_hash_map : handles collisions with quadratic internal probing
+
+[Figure 5.2](https://i0.wp.com/codecapsule.com/wp-content/uploads/2013/04/kvstore_hash_dense_hash_map_web.jpg?w=770&ssl=1) is useful
+
+***2.3 HashDB from Kyoto Cabinet***
+
+The bucket array has a fixed length and is never resized
+
+[Figure 5.3](https://i0.wp.com/codecapsule.com/wp-content/uploads/2013/04/kvstore_hash_kyoto_cabinet_web.jpg?w=770&ssl=1) is useful
+
+When designing the data organization of a hash table, the preferred solution should be to store the collision data with the buckets and not with the entries
+
+## Part 6 Open-Addressing Hash Tables
+
+### 1. Open-addressing hash tables
+
+It minimize the number of I/O operations to access entries
+
+### 2. Comparing different algorithm
+Comparing among Linear Probing, Hopscotch hashing, and Robin Hood hashing, Robin Hood hashing has 
+- The best DIB(Distance to Initial Bucket which is also calling Probe Sequence Length” (PSL)) 
+- The best DMB(Distance to Missing Bucket) - An acceptable DFB(Distance to Free Bucket)
+
+[Visual representation of the DIB, DFB and DMB](https://i0.wp.com/codecapsule.com/wp-content/uploads/2014/05/kvstore-part6-metrics.png?w=530&ssl=1)
+
+(TODO)Need a article to deep understand these algorithm.
+
+## Part 7: Optimizing Data Structures for SSDs
+
+[Fully notes about SSDs](./SSD.md)
