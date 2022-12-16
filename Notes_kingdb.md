@@ -24,9 +24,8 @@
   - [1. Open-addressing hash tables](#1-open-addressing-hash-tables)
   - [2. Comparing different algorithm](#2-comparing-different-algorithm)
 
-- [Part 7: Optimizing Data Structures for SSDs](#part-7-optimizing-data-structures-for-ssds)
-  - []()
-  - []()
+- [Part 7: Optimizing Data Structures for SSDs TODO](#part-7-optimizing-data-structures-for-ssds-todo)
+
 </details>
 
 
@@ -208,6 +207,10 @@ Comparing among Linear Probing, Hopscotch hashing, and Robin Hood hashing, Robin
 
 (TODO)Need a article to deep understand these algorithm.
 
-## Part 7: Optimizing Data Structures for SSDs
+## Part 7: Optimizing Data Structures for SSDs TODO
 
 [Fully notes about SSDs](./SSD.md)
+
+## Part 8: Architecture of KingDB
+
+### 1. Introduction
